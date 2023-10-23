@@ -2,5 +2,5 @@ mysql:
   url: 8.130.105.144
   port: 3306
   username: root
-  password: 75ca513d998a5101
+  password: ？
   database: NewThread
