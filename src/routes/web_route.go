@@ -9,9 +9,11 @@ import (
 func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 	router := gin.Default()
 	router.Use(middlewares...)
-	user_router := router.Group("/user")
+	group_router := router.Group("/groups")
 	{
-		user_router.GET("", controller.UserInfo)
+		group_router.GET("list", controller.GroupInfo)
+		group_router.GET("teacher", controller.GroupTeacherInfo)
+		group_router.GET("student", controller.GroupStudentInfo)
 	}
 	return router
 }
