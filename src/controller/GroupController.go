@@ -27,7 +27,7 @@ func GroupTeacherInfo(c *gin.Context) {
 }
 
 func GroupStudentInfo(c *gin.Context) {
-	data, err := logic.NewGroupService().GroupInfo()
+	data, err := logic.NewGroupService().GroupStudentInfo()
 	if err != nil {
 		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
 		return

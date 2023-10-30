@@ -15,8 +15,6 @@ const (
 	UnmatchedPassword
 	ServerBusy
 	RecordNotFound
-	ChildExit
-	ClassNameExit
 )
 
 // 业务逻辑状态信息描述

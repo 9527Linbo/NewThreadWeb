@@ -11,7 +11,7 @@
  Target Server Version : 50740
  File Encoding         : 65001
 
- Date: 26/10/2023 09:04:30
+ Date: 30/10/2023 14:56:05
 */
 
 SET NAMES utf8mb4;
@@ -39,9 +39,7 @@ DROP TABLE IF EXISTS `t_awards`;
 CREATE TABLE `t_awards`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '唯一标识id',
   `type_id` int(11) NOT NULL COMMENT '类型表id',
-  `name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '获奖名次',
-  `student_id` bigint(20) NOT NULL COMMENT '负责人id（student表中的id）',
-  `teacher_id` bigint(20) NULL DEFAULT NULL COMMENT '指导老师id（teacher表中的id）',
+  `rank` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '获奖名次',
   `TeamName` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '获奖团队',
   `number` bigint(20) NOT NULL COMMENT '获奖人数',
   `update_time` datetime NOT NULL COMMENT '修改时间',
@@ -56,10 +54,13 @@ DROP TABLE IF EXISTS `t_awardsName`;
 CREATE TABLE `t_awardsName`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '唯一标识id',
   `name` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '类型名',
-  `description` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '描述',
+  `teacher_id` bigint(20) NOT NULL COMMENT '负责老师ID',
+  `group_id` bigint(20) NOT NULL COMMENT '负责组ID',
+  `type` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '类型',
+  `start_time` datetime NOT NULL COMMENT '报名开始时间',
+  `end_time` datetime NOT NULL COMMENT '报名结束时间',
   `update_time` datetime NOT NULL COMMENT '修改时间',
   `create_time` datetime NOT NULL COMMENT '创建时间',
-  `type` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '类型',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
@@ -78,13 +79,26 @@ CREATE TABLE `t_group`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Table structure for t_image
+-- Table structure for t_imageArticle
 -- ----------------------------
-DROP TABLE IF EXISTS `t_image`;
-CREATE TABLE `t_image`  (
+DROP TABLE IF EXISTS `t_imageArticle`;
+CREATE TABLE `t_imageArticle`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '唯一标识id',
   `url` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'URL',
   `article_id` bigint(20) NOT NULL COMMENT '文章id',
+  `update_time` datetime NOT NULL COMMENT '修改时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_imageUser
+-- ----------------------------
+DROP TABLE IF EXISTS `t_imageUser`;
+CREATE TABLE `t_imageUser`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '唯一标识id',
+  `url` varchar(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT 'URL',
+  `user_id` bigint(20) NOT NULL COMMENT '用户id',
   `update_time` datetime NOT NULL COMMENT '修改时间',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
@@ -102,7 +116,7 @@ CREATE TABLE `t_position`  (
   `update_time` datetime NOT NULL COMMENT '修改时间',
   `create_time` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1001 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Table structure for t_student
@@ -158,5 +172,18 @@ CREATE TABLE `t_user`  (
   `create_Time` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 301 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for t_wishes
+-- ----------------------------
+DROP TABLE IF EXISTS `t_wishes`;
+CREATE TABLE `t_wishes`  (
+  `id` bigint(20) NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `wishes` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `update_time` datetime NOT NULL,
+  `create_time` datetime NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;

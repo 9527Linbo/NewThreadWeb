@@ -12,8 +12,12 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 	group_router := router.Group("/groups")
 	{
 		group_router.GET("list", controller.GroupInfo)
-		group_router.GET("teacher", controller.GroupTeacherInfo)
-		group_router.GET("student", controller.GroupStudentInfo)
+		group_router.GET("teachers", controller.GroupTeacherInfo)
+		group_router.GET("students", controller.GroupStudentInfo)
+	}
+	honour_router := router.Group("/honours")
+	{
+		honour_router.GET("list", controller.HonoursList)
 	}
 	return router
 }

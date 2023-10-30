@@ -1,7 +1,9 @@
 package pojo
 
 type Student struct {
-	Id          int    `gorm:"column:id" json:"Group_id"`
-	GroupName   string `gorm:"column:name" json:"GroupName"`
-	Description string `gorm:"column:description" json:"Description"`
+	Name     string      `gorm:"column:name" json:"Name"`
+	URL      string      `gorm:"column:url" json:"URL"`
+	Userid   int         `gorm:"column:user_id" json:"User_id"`
+	Group    string      `gorm:"column:group" json:"Group"`
+	Position interface{} `gorm:"-" json:"Position"`
 }
