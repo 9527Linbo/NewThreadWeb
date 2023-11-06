@@ -17,13 +17,12 @@ func InitMysql() (err error) {
 	viper.SetConfigName("configs")
 	// 设置配置文件的类型
 	viper.SetConfigType("yaml")
-	// 添加配置文件的路径，指定 configs 目录下寻找
-	viper.AddConfigPath("./src/configs")
+	// 添加配置文件的路径，指定 目录下寻找
+	viper.AddConfigPath("/usr/local/src")
 	configsErr := viper.ReadInConfig()
 	if configsErr != nil {
-		print("configsErr")
+		panic(any("configsErr: " + configsErr.Error()))
 	}
-	print(viper.GetString("mysql.username"))
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		viper.GetString("mysql.username"),
 		viper.GetString("mysql.password"),
@@ -32,8 +31,5 @@ func InitMysql() (err error) {
 		viper.GetString("mysql.database"),
 	)
 	Db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		return
-	}
 	return err
 }
