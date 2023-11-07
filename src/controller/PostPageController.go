@@ -8,8 +8,18 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func PostInfo(c *gin.Context) {
-	data, err := logic.NewPostService().PostInfo()
+// todo
+// func PostInfo(c *gin.Context) {
+// 	data, err := logic.NewPostService().PostInfo()
+// 	if err != nil {
+// 		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
+// 		return
+// 	}
+// 	result.CommonResp(c, http.StatusOK, result.Success, data)
+// }
+
+func PageShareInfo(c *gin.Context) {
+	data, err := logic.NewPostService().PageShareInfo(c)
 	if err != nil {
 		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
 		return
@@ -17,8 +27,8 @@ func PostInfo(c *gin.Context) {
 	result.CommonResp(c, http.StatusOK, result.Success, data)
 }
 
-func PostShareInfo(c *gin.Context) {
-	data, err := logic.NewPostService().PostShareInfo()
+func PageNewsInfo(c *gin.Context) {
+	data, err := logic.NewPostService().PageNewsInfo(c)
 	if err != nil {
 		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
 		return
@@ -26,17 +36,8 @@ func PostShareInfo(c *gin.Context) {
 	result.CommonResp(c, http.StatusOK, result.Success, data)
 }
 
-func PostNewsInfo(c *gin.Context) {
-	data, err := logic.NewPostService().PostNewsInfo()
-	if err != nil {
-		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
-		return
-	}
-	result.CommonResp(c, http.StatusOK, result.Success, data)
-}
-
-func PostActivityInfo(c *gin.Context) {
-	data, err := logic.NewPostService().PostActivityInfo()
+func PageActivityInfo(c *gin.Context) {
+	data, err := logic.NewPostService().PageActivityInfo(c)
 	if err != nil {
 		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
 		return

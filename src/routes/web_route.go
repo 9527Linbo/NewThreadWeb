@@ -19,12 +19,12 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 	{
 		honour_router.GET("list", controller.HonoursList)
 	}
-	group_post_router := router.Group("/group_post")
+	group_post_router := router.Group("/post")
 	{
-		group_post_router.GET("list", controller.PostInfo)
-		group_post_router.GET("shares", controller.PostShareInfo)
-		group_post_router.GET("news", controller.PostNewsInfo)
-		group_post_router.GET("activities", controller.PostActivityInfo)
+		//group_post_router.GET("/list", controller.PostInfo)
+		group_post_router.GET("/sharelist", controller.PageShareInfo)
+		group_post_router.GET("/newslist", controller.PageNewsInfo)
+		group_post_router.GET("/activitylist", controller.PageActivityInfo)
 	}
 	return router
 }
