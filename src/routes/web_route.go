@@ -18,6 +18,8 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 	honour_router := router.Group("/honours")
 	{
 		honour_router.GET("list", controller.HonoursList)
+		honour_router.GET("students", controller.HonoursStudents)
+		honour_router.GET("projects", controller.HonoursProjects)
 	}
 	return router
 }

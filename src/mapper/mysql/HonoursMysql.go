@@ -25,3 +25,39 @@ func (c *HonoursMysql) HonoursTeamMysql(id int) ([]pojo.HonoursTeam, error) {
 	}
 	return m, err
 }
+
+func (c *HonoursMysql) HonoursStudentsMysql() ([]pojo.StudentHonours, error) {
+	var m []pojo.StudentHonours
+	err := Db.Raw("SELECT name,description,img.url FROM t_studentGraduate s LEFT JOIN t_imageUser img ON s.user_id = img.user_id").Scan(&m).Error
+	if err != nil {
+		return nil, err
+	}
+	return m, err
+}
+
+func (c *HonoursMysql) HonoursProjectsMysql() ([]pojo.Project, error) {
+	var m []pojo.Project
+	err := Db.Raw("SELECT id,name,description,type FROM t_project").Scan(&m).Error
+	if err != nil {
+		return nil, err
+	}
+	return m, err
+}
+
+func (c *HonoursMysql) HonoursProjectURLMysql(id int) ([]pojo.ImgURL, error) {
+	var m []pojo.ImgURL
+	err := Db.Raw("SELECT url FROM t_imageProject WHERE project_id = ?", id).Scan(&m).Error
+	if err != nil {
+		return nil, err
+	}
+	return m, err
+}
+
+func (c *HonoursMysql) HonoursProjectHonoursMysql(id int) ([]pojo.ProjectHonours, error) {
+	var m []pojo.ProjectHonours
+	err := Db.Raw("SELECT `name`,`rank`,time FROM t_awardsProject p LEFT JOIN t_awardsName n ON p.type_id = n.id WHERE p.project_id = ?", id).Scan(&m).Error
+	if err != nil {
+		return nil, err
+	}
+	return m, err
+}
