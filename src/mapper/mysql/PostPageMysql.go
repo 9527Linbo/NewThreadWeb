@@ -11,6 +11,10 @@ func NewPostMysql() *PostMysql {
 	return &PostMysql{}
 }
 
+/*
+请求 团队动态-知识分享中的某一页
+返回 当前页码、总页码、当前页中所有文章的标题、内容和第一张图片url
+*/
 func (c *PostMysql) PageShareMysql(current_page, page_size string) (*pojo.PageShare, error) {
 	var page pojo.PageShare
 	var post []pojo.PostListShare
@@ -41,6 +45,10 @@ func (c *PostMysql) PageShareMysql(current_page, page_size string) (*pojo.PageSh
 	return &page, nil
 }
 
+/*
+请求团队动态-团队新闻中的某一页
+返回当前页码、总页码、当前页中所有文章的标题、内容
+*/
 func (c *PostMysql) PageNewsMysql(current_page, page_size string) (*pojo.PageNews, error) {
 	var page pojo.PageNews
 	var post []pojo.PostListNews
@@ -65,6 +73,10 @@ func (c *PostMysql) PageNewsMysql(current_page, page_size string) (*pojo.PageNew
 	return &page, nil
 }
 
+/*
+请求团队动态-文化活动中的某一页
+返回当前页码、总页码、当前页中所有文章的标题、内容和第一张图片url
+*/
 func (c *PostMysql) PageActivityMysql(current_page, page_size string) (*pojo.PageActivity, error) {
 	var page pojo.PageActivity
 	var post []pojo.PostListActivity

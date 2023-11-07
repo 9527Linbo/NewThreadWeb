@@ -10,7 +10,7 @@ import (
 
 // todo
 // func PostInfo(c *gin.Context) {
-// 	data, err := logic.NewPostService().PostInfo()
+// 	data, err := logic.NewPostPageService().PostInfo()
 // 	if err != nil {
 // 		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
 // 		return
@@ -19,7 +19,7 @@ import (
 // }
 
 func PageShareInfo(c *gin.Context) {
-	data, err := logic.NewPostService().PageShareInfo(c)
+	data, err := logic.NewPostPageService().PageShareInfo(c)
 	if err != nil {
 		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
 		return
@@ -28,7 +28,7 @@ func PageShareInfo(c *gin.Context) {
 }
 
 func PageNewsInfo(c *gin.Context) {
-	data, err := logic.NewPostService().PageNewsInfo(c)
+	data, err := logic.NewPostPageService().PageNewsInfo(c)
 	if err != nil {
 		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
 		return
@@ -37,7 +37,7 @@ func PageNewsInfo(c *gin.Context) {
 }
 
 func PageActivityInfo(c *gin.Context) {
-	data, err := logic.NewPostService().PageActivityInfo(c)
+	data, err := logic.NewPostPageService().PageActivityInfo(c)
 	if err != nil {
 		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
 		return
