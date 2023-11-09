@@ -27,6 +27,9 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 		group_post_router.GET("/sharelist", controller.PageShareInfo)
 		group_post_router.GET("/newslist", controller.PageNewsInfo)
 		group_post_router.GET("/activitylist", controller.PageActivityInfo)
+		group_post_router.GET("/readshare", controller.ReadShare)
+		group_post_router.GET("/readnews", controller.ReadNews)
+		group_post_router.GET("/readactivity", controller.ReadActivity)
 	}
 	return router
 }

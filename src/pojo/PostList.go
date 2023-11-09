@@ -1,21 +1,21 @@
 package pojo
 
 type PostListShare struct {
-	Postid     int    `gorm:"column:id" json:"Article_id"`
-	Title      string `gorm:"column:title" json:"Title"`
-	Content    string `gorm:"column:content" json:"Content"`
-	URLArticle string `gorm:"column:url" json:"URLArticle"`
+	Postid     int64  `gorm:"column:id" json:"articleId"`
+	Title      string `gorm:"column:title" json:"title"`
+	Content    string `gorm:"column:content" json:"content"`
+	PostImgUrl string `gorm:"column:url" json:"articleImgUrl"`
 }
 
 type PostListNews struct {
-	Postid  int    `gorm:"column:id" json:"Article_id"`
-	Title   string `gorm:"column:title" json:"Title"`
-	Content string `gorm:"column:content" json:"Content"`
+	Postid  int64  `gorm:"column:id" json:"articleId"`
+	Title   string `gorm:"column:title" json:"title"`
+	Content string `gorm:"column:content" json:"content"`
 }
 
 type PostListActivity struct {
-	Postid     int    `gorm:"column:id" json:"Article_id"`
-	Title      string `gorm:"column:title" json:"Title"`
-	Content    string `gorm:"column:content" json:"Content"`
-	URLArticle string `gorm:"column:url" json:"URLArticle"`
+	Postid     int64  `gorm:"column:id" json:"articleId"`
+	Title      string `gorm:"column:title" json:"title"`
+	Content    string `gorm:"column:content" json:"content"`
+	PostImgUrl string `gorm:"column:url" json:"articleImgUrl"`
 }
