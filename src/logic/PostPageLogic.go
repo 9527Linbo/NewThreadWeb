@@ -4,6 +4,7 @@ import (
 	mapper "NewThread/src/mapper/mysql"
 	"NewThread/src/pojo"
 	"fmt"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,16 +18,16 @@ func NewPostPageService() *PostPageLogic {
 // 获取请求中的页码和每页文章数量
 func GetPageInfo(ctx *gin.Context) (string, string) {
 	page := ctx.Query("page")
-	if page == "" {
+	if _, err := strconv.Atoi(page); err != nil {
 		page = "1"
 	}
 	size := "20"
 	return page, size
 }
 
-func (c *PostPageLogic) PageShareInfo(ctx *gin.Context) (*pojo.PageShare, error) {
+func (*PostPageLogic) PageShareInfo(ctx *gin.Context) (*pojo.PageShare, error) {
 	page, size := GetPageInfo(ctx)
-	data, err := mapper.NewPostMysql().PageShareMysql(page, size)
+	data, err := mapper.NewPostPageMysql().PageShareMysql(page, size)
 	if err != nil {
 		return nil, err
 	}
@@ -34,9 +35,9 @@ func (c *PostPageLogic) PageShareInfo(ctx *gin.Context) (*pojo.PageShare, error)
 	return data, err
 }
 
-func (c *PostPageLogic) PageNewsInfo(ctx *gin.Context) (*pojo.PageNews, error) {
+func (*PostPageLogic) PageNewsInfo(ctx *gin.Context) (*pojo.PageNews, error) {
 	page, size := GetPageInfo(ctx)
-	data, err := mapper.NewPostMysql().PageNewsMysql(page, size)
+	data, err := mapper.NewPostPageMysql().PageNewsMysql(page, size)
 	if err != nil {
 		return nil, err
 	}
@@ -44,9 +45,9 @@ func (c *PostPageLogic) PageNewsInfo(ctx *gin.Context) (*pojo.PageNews, error) {
 	return data, err
 }
 
-func (c *PostPageLogic) PageActivityInfo(ctx *gin.Context) (*pojo.PageActivity, error) {
+func (*PostPageLogic) PageActivityInfo(ctx *gin.Context) (*pojo.PageActivity, error) {
 	page, size := GetPageInfo(ctx)
-	data, err := mapper.NewPostMysql().PageActivityMysql(page, size)
+	data, err := mapper.NewPostPageMysql().PageActivityMysql(page, size)
 	if err != nil {
 		return nil, err
 	}
