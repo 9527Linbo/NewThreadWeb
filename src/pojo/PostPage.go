@@ -1,19 +1,19 @@
 package pojo
 
 type PageShare struct {
-	CurrentPage  int `gorm:"-" json:"Current_page"`
-	TotalPageNum int `gorm:"column:sum" json:"Total_page"`
-	PostList     *[]PostListShare
+	CurrentPage  int              `gorm:"-" json:"currentPage"`
+	TotalPageNum int              `gorm:"column:sum" json:"totalPage"`
+	PostList     *[]PostListShare `json:"postList"`
 }
 
 type PageNews struct {
-	CurrentPage  int `gorm:"-" json:"Current_page"`
-	TotalPageNum int `gorm:"column:sum" json:"Total_page"`
-	PostList     *[]PostListNews
+	CurrentPage  int             `gorm:"-" json:"currentPage"`
+	TotalPageNum int             `gorm:"column:sum" json:"totalPage"`
+	PostList     *[]PostListNews `json:"postList"`
 }
 
 type PageActivity struct {
-	CurrentPage  int `gorm:"-" json:"Current_page"`
-	TotalPageNum int `gorm:"column:sum" json:"Total_page"`
-	PostList     *[]PostListActivity
+	CurrentPage  int                 `gorm:"-" json:"currentPage"`
+	TotalPageNum int                 `gorm:"column:sum" json:"totalPage"`
+	PostList     *[]PostListActivity `json:"postList"`
 }
