@@ -1,6 +1,10 @@
 mysql:
-  url: 127.0.0.1
+  url: rm-bp1tm7dix03i1gp8u2o.mysql.rds.aliyuncs.com
   port: 3306
-  username: root
-  password: 952759
-  database: NewThread
+  username: new_thread_0
+  password: Nt123456
+  database: new_thread
+
+
+OSS:
+  BucketName: newthreadoss

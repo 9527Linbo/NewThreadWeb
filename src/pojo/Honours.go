@@ -3,7 +3,7 @@ package pojo
 import "time"
 
 type HonoursTeam struct {
-	HonoursTeam string `gorm:"column:TeamName" json:"TeamName"`
+	HonoursTeam string `gorm:"column:teamname" json:"TeamName"`
 	Number      int    `gorm:"column:number" json:"Number"`
 	Rank        string `gorm:"column:rank" json:"Rank"`
 }
