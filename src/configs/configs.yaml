@@ -1,5 +1,5 @@
 mysql:
-  url: rm-bp1tm7dix03i1gp8u2o.mysql.rds.aliyuncs.com
+  url: 
   port: 3306
   username: new_thread_0
   password: Nt123456
