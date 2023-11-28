@@ -1,8 +1,8 @@
 mysql:
   url: 
   port: 3306
-  username: new_thread_0
-  password: Nt123456
+  username: 
+  password: 
   database: new_thread
 
 
