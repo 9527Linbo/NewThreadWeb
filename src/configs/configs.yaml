@@ -1,0 +1,10 @@
+mysql:
+  url: 
+  port: 3306
+  username: 
+  password: 
+  database: new_thread
+
+
+OSS:
+  BucketName: newthreadoss
