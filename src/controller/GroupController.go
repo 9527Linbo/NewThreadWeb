@@ -2,6 +2,7 @@ package controller
 
 import (
 	"NewThread/src/logic"
+	"NewThread/src/pojo"
 	"NewThread/src/result"
 	"net/http"
 
@@ -27,7 +28,22 @@ func GroupTeacherInfo(c *gin.Context) {
 }
 
 func GroupStudentInfo(c *gin.Context) {
-	data, err := logic.NewGroupService().GroupStudentInfo()
+	var req pojo.Year
+	if err := c.ShouldBind(&req); err != nil {
+		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
+		return
+	}
+	print(req.Year)
+	data, err := logic.NewGroupService().GroupStudentInfo(req.Year)
+	if err != nil {
+		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
+		return
+	}
+	result.CommonResp(c, http.StatusOK, result.Success, data)
+}
+
+func Yearlist(c *gin.Context) {
+	data, err := logic.NewGroupService().Yearlist()
 	if err != nil {
 		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
 		return

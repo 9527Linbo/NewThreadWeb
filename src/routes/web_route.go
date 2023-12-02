@@ -14,13 +14,16 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 		group_router.GET("list", controller.GroupInfo)
 		group_router.GET("teachers", controller.GroupTeacherInfo)
 		group_router.GET("students", controller.GroupStudentInfo)
+		group_router.GET("yearlist", controller.Yearlist)
 	}
+
 	honour_router := router.Group("/honours")
 	{
 		honour_router.GET("list", controller.HonoursList)
 		honour_router.GET("students", controller.HonoursStudents)
 		honour_router.GET("projects", controller.HonoursProjects)
 	}
+
 	group_post_router := router.Group("/post")
 	{
 		//group_post_router.GET("/list", controller.PostInfo)
@@ -31,5 +34,11 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 		group_post_router.GET("/readnews", controller.ReadNews)
 		group_post_router.GET("/readactivity", controller.ReadActivity)
 	}
+
+	group_file_router := router.Group("/file")
+	{
+		group_file_router.POST("/upload", controller.UploadFile)
+	}
+
 	return router
 }

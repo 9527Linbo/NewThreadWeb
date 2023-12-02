@@ -34,8 +34,8 @@ func (c *GroupLogic) GroupTeacherInfo() ([]pojo.Teacher, error) {
 	return mes, err
 }
 
-func (c *GroupLogic) GroupStudentInfo() ([]pojo.Student, error) {
-	mes, err := mapper.NewGroupMysql().GroupStudentListAndWishesMysql()
+func (c *GroupLogic) GroupStudentInfo(year int) ([]pojo.Student, error) {
+	mes, err := mapper.NewGroupMysql().GroupStudentListAndWishesMysql(year)
 	if err != nil {
 		return nil, err
 	}
@@ -48,4 +48,8 @@ func (c *GroupLogic) GroupStudentInfo() ([]pojo.Student, error) {
 		mes[i].Position = position
 	}
 	return mes, err
+}
+
+func (c *GroupLogic) Yearlist() ([]int, error) {
+	return mapper.NewGroupMysql().YearlistMysql()
 }
