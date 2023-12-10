@@ -34,3 +34,21 @@ func HonoursProjects(c *gin.Context) {
 	}
 	result.CommonResp(c, http.StatusOK, result.Success, data)
 }
+
+func HonoursMilestone(c *gin.Context) {
+	data, err := logic.NewHonoursService().HonoursMilestone()
+	if err != nil {
+		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
+		return
+	}
+	result.CommonResp(c, http.StatusOK, result.Success, data)
+}
+
+func HonoursMilestones(c *gin.Context) {
+	data, err := logic.NewHonoursService().HonoursMilestones()
+	if err != nil {
+		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
+		return
+	}
+	result.CommonResp(c, http.StatusOK, result.Success, data)
+}

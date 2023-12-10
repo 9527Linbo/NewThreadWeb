@@ -59,3 +59,53 @@ func (c *HonoursLogic) HonoursProjects() (mes []pojo.Project, err error) {
 	//没出现错误则返回查询信息
 	return mes, err
 }
+
+func (c *HonoursLogic) HonoursMilestone() (mes []pojo.Project, err error) {
+	mes, err = mapper.NewHonoursMysql().HonoursProjectsMilestoneMysql()
+	if err != nil {
+		return nil, err
+	}
+
+	//根据ID 查询URL
+	for i := range mes {
+		mes[i].URL, err = mapper.NewHonoursMysql().HonoursProjectURLMysql(mes[i].ID)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	//根据ID 查询获得奖项
+	for i := range mes {
+		mes[i].Honours, err = mapper.NewHonoursMysql().HonoursProjectHonoursMysql(mes[i].ID)
+		if err != nil {
+			return nil, err
+		}
+	}
+	//没出现错误则返回查询信息
+	return mes, err
+}
+
+func (c *HonoursLogic) HonoursMilestones() (mes []pojo.Project, err error) {
+	mes, err = mapper.NewHonoursMysql().HonoursProjectsMilestonesMysql()
+	if err != nil {
+		return nil, err
+	}
+
+	//根据ID 查询URL
+	for i := range mes {
+		mes[i].URL, err = mapper.NewHonoursMysql().HonoursProjectURLMysql(mes[i].ID)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	//根据ID 查询获得奖项
+	for i := range mes {
+		mes[i].Honours, err = mapper.NewHonoursMysql().HonoursProjectHonoursMysql(mes[i].ID)
+		if err != nil {
+			return nil, err
+		}
+	}
+	//没出现错误则返回查询信息
+	return mes, err
+}
