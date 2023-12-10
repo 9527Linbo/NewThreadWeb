@@ -61,3 +61,21 @@ func (c *HonoursMysql) HonoursProjectHonoursMysql(id int) ([]pojo.ProjectHonours
 	}
 	return m, err
 }
+
+func (c *HonoursMysql) HonoursProjectsMilestoneMysql() ([]pojo.Project, error) {
+	var m []pojo.Project
+	err := Db.Raw("SELECT id,name,description,type FROM t_project order by create_time desc limit 6").Scan(&m).Error
+	if err != nil {
+		return nil, err
+	}
+	return m, err
+}
+
+func (c *HonoursMysql) HonoursProjectsMilestonesMysql() ([]pojo.Project, error) {
+	var m []pojo.Project
+	err := Db.Raw("SELECT id,name,description,type FROM t_project").Scan(&m).Error
+	if err != nil {
+		return nil, err
+	}
+	return m, err
+}
