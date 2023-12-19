@@ -40,6 +40,8 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 	group_file_router := router.Group("/file")
 	{
 		group_file_router.POST("/upload", controller.UploadFile)
+		group_file_router.GET("/download", controller.DownloadFile)
+		group_file_router.GET("/list", controller.FileList)
 	}
 
 	return router

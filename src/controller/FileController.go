@@ -2,12 +2,10 @@ package controller
 
 import (
 	"NewThread/src/result"
-	"io"
+	"NewThread/src/utils"
 	"net/http"
-	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/spf13/viper"
 )
 
 func UploadFile(c *gin.Context) {
@@ -18,32 +16,34 @@ func UploadFile(c *gin.Context) {
 		return
 	}
 
-	//拿到文件名和存储路径
-	filename := header.Filename
-	path := viper.GetString("File.ESCPath")
-
-	//创建一个out流
-	out, err := os.Create(path + filename)
-	if err != nil {
+	if err = utils.Upload_Simple_File_Clinet_to_Server(header); err != nil {
 		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
 		return
 	}
 
-	//将内容读入src
-	src, err := header.Open()
-	if err != nil {
-		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
-		return
-	}
-
-	//将读取的文件流写到文件中
-	_, err = io.Copy(out, src)
-	if err != nil {
-		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
-		return
-	}
-
-	defer src.Close()
-	defer out.Close()
 	result.CommonResp(c, http.StatusOK, result.Success, result.EmptyData)
+}
+
+func DownloadFile(c *gin.Context) {
+	path := c.Query("path")
+	filename := c.Query("fileName")
+	data, err := utils.Download_File(path + filename)
+	if err != nil {
+		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
+		return
+	}
+	c.Header("Content-Type", "application/octet-stream")
+	c.Header("Content-Disposition", "attachment; filename="+filename) // 用来指定下载下来的文件名
+	c.Header("Content-Transfer-Encoding", "binary")
+	c.Writer.Write(data)
+}
+
+func FileList(c *gin.Context) {
+	path := c.Query("path")
+	data, err := utils.FileList(path)
+	if err != nil {
+		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
+		return
+	}
+	result.CommonResp(c, http.StatusOK, result.Success, data)
 }

@@ -4,6 +4,7 @@ go 1.20
 
 require (
 	github.com/aliyun/aliyun-oss-go-sdk v2.2.10+incompatible
+	github.com/dustin/go-humanize v1.0.1
 	github.com/gin-gonic/gin v1.9.1
 	github.com/jinzhu/gorm v1.9.16
 	github.com/spf13/viper v1.17.0
