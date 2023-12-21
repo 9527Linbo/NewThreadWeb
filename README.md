@@ -2,9 +2,9 @@
 
 文件说明：
 
-cmd：  main.go 项目启动代码。 
+cmd：  main.go 项目启动代码。   
 
-configs：   初始化项目配置文件。
+configs：   初始化项目配置文件。  
 
 controller：  controller层，负责控制代码调用。
 
