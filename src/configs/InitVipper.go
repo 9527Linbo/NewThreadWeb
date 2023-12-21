@@ -14,10 +14,10 @@ func InitConfig() error {
 	// 添加配置文件的路径，指定 目录下寻找
 
 	//服务器的配置文件地址
-	viper.AddConfigPath("/www/NewThreadBackend")
+	//viper.AddConfigPath("/www/NewThreadBackend")
 
 	//本地的配置文件地址
-	//viper.AddConfigPath("./src/configs")
+	viper.AddConfigPath("./src/configs")
 
 	err := viper.ReadInConfig()
 	if err != nil {

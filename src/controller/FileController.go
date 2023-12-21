@@ -9,15 +9,16 @@ import (
 )
 
 func UploadFile(c *gin.Context) {
-
-	header, err := c.FormFile("upload")
+	header, err := c.FormFile("file")
+	path := c.Query("path")
 	if err != nil {
 		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
 		return
 	}
 
-	if err = utils.Upload_Simple_File_Clinet_to_Server(header); err != nil {
-		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
+	if err = utils.Upload_Simple_File_Clinet_to_Server(header, path); err != nil {
+		//上传失败
+		result.CommonResp(c, http.StatusInternalServerError, result.UploadFail, result.EmptyData)
 		return
 	}
 

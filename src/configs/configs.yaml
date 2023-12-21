@@ -1,0 +1,14 @@
+mysql:
+  url: 127.0.0.1
+  port: 3306
+  username: root
+  password: 952759
+  database: newthread
+
+
+OSS:
+  BucketName: newthreadoss
+
+
+File:
+  ESCPath: /www/temp/

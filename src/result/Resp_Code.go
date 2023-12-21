@@ -14,6 +14,7 @@ const (
 	NotInClass
 	UnmatchedPassword
 	ServerBusy
+	UploadFail
 	RecordNotFound
 )
 
@@ -25,6 +26,7 @@ var recodeText = map[ResCode]string{
 	InvalidPermission: "无此权限",
 	InvalidParam:      "参数错误",
 	ServerBusy:        "服务繁忙",
+	UploadFail:        "上传失败",
 	RecordNotFound:    "找不到记录",
 }
 
