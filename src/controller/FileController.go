@@ -10,7 +10,7 @@ import (
 
 func UploadFile(c *gin.Context) {
 	header, err := c.FormFile("file")
-	path := c.Query("path")
+	path := c.PostForm("path")
 	if err != nil {
 		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
 		return

@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"io"
 	"mime/multipart"
 	"os"
@@ -33,7 +34,7 @@ func Upload_Simple_File_Clinet_to_Server(header *multipart.FileHeader, path stri
 	//拿到文件名和存储路径
 	filename := header.Filename
 	path = viper.GetString("File.ESCPath") + path
-
+	fmt.Print(path)
 	//创建一个out流
 	out, err := os.Create(path + filename)
 	if err != nil {
