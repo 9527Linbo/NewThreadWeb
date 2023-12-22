@@ -1,11 +1,12 @@
 package utils
 
 import (
-	"fmt"
 	"io"
 	"mime/multipart"
 	"os"
+	"path/filepath"
 
+	"github.com/google/uuid"
 	"github.com/spf13/viper"
 )
 
@@ -30,30 +31,45 @@ func Upload_Simple_File_Server_to_OSS() error {
 /*
 简单文件上传（大小不超过5G，对并发上传性能要求不高）： 客户端---->服务器端
 */
-func Upload_Simple_File_Clinet_to_Server(header *multipart.FileHeader, path string) error {
-	//拿到文件名和存储路径
+func Upload_Simple_File_Clinet_to_Server(header *multipart.FileHeader, path string) (string, error) {
+
 	filename := header.Filename
-	path = viper.GetString("File.ESCPath") + path
-	fmt.Print(path)
-	//创建一个out流
-	out, err := os.Create(path + filename)
+
+	//获取后缀名
+	ext := filepath.Ext(filename)
+
+	//生成uuid
+	_uuid, err := uuid.NewV6()
 	if err != nil {
-		return err
+		return "", err
+	}
+
+	//文件uuid = uuid + 后缀名
+	fileuuid := _uuid.String() + ext
+
+	//拿到服务器文件储存的基础路径
+	path = viper.GetString("File.ESCPath") + path
+
+	//创建一个out流
+	out, err := os.Create(path + fileuuid)
+	if err != nil {
+		return "", err
 	}
 
 	//将内容 写入 context
 	context, err := header.Open()
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	//将读取的内容写到文件中
 	_, err = io.Copy(out, context)
 	if err != nil {
-		return err
+		return "", err
 	}
 
+	//操作完成后关闭流
 	defer context.Close()
 	defer out.Close()
-	return nil
+	return fileuuid, nil
 }

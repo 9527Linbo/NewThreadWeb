@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"NewThread/src/logic"
 	"NewThread/src/result"
 	"NewThread/src/utils"
 	"net/http"
@@ -10,19 +11,19 @@ import (
 
 func UploadFile(c *gin.Context) {
 	header, err := c.FormFile("file")
-	path := c.PostForm("path")
 	if err != nil {
-		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
+		result.CommonResp(c, http.StatusInternalServerError, result.InvalidParam, result.EmptyData)
 		return
 	}
-
-	if err = utils.Upload_Simple_File_Clinet_to_Server(header, path); err != nil {
-		//上传失败
+	path := c.PostForm("path")
+	username := c.PostForm("username")
+	filename := header.Filename
+	err = logic.NewFileService().UploadFile(header, path, username, filename)
+	if err != nil {
 		result.CommonResp(c, http.StatusInternalServerError, result.UploadFail, result.EmptyData)
 		return
 	}
-
-	result.CommonResp(c, http.StatusOK, result.Success, result.EmptyData)
+	result.CommonResp(c, http.StatusOK, result.Success, nil)
 }
 
 func DownloadFile(c *gin.Context) {

@@ -33,7 +33,6 @@ func GroupStudentInfo(c *gin.Context) {
 		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
 		return
 	}
-	print(req.Year)
 	data, err := logic.NewGroupService().GroupStudentInfo(req.Year)
 	if err != nil {
 		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
