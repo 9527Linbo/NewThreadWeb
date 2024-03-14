@@ -1,6 +1,8 @@
 package result
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
 // RespMsg : 响应数据结构
 type RespMsg struct {
@@ -21,6 +23,14 @@ func NewRespMsg(code ResCode, data interface{}) *RespMsg {
 func CommonResp(c *gin.Context, httpCode int, statusCode ResCode, data interface{}) {
 	c.JSON(httpCode, *NewRespMsg(statusCode, data))
 	c.Abort() //此路由后的 gin.HandlerFunc 将不再被调用
+}
+
+func DownloadFileResp(c *gin.Context, httpCode int, filename string, data []byte) {
+	c.Status(httpCode)
+	c.Header("Content-Type", "application/octet-stream")
+	c.Header("Content-Disposition", "attachment; filename="+filename) // 用来指定下载下来的文件名
+	c.Header("Content-Transfer-Encoding", "binary")
+	c.Writer.Write(data)
 }
 
 type ListResp struct {

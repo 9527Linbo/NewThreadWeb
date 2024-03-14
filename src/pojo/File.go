@@ -1,8 +1,11 @@
 package pojo
 
+//文件
 type FileList struct {
-	FileName   string `json:"Name"`
-	UserName   string `json:"UserName"`
-	UpdateTime string `json:"UpdateTime"`
-	Size       string `json:"size"`
+	Filename   string `gorm:"column:filename" json:"Name"`
+	Fileuuid   string `gorm:"column:fileuuid" json:"FileUUID"`
+	AtOSS      bool   `gorm:"column:atOSS" json:"AtOSS"`
+	Username   string `gorm:"column:username" json:"UserName"`
+	UpdateTime string `gorm:"-" json:"UpdateTime"`
+	Size       string `gorm:"-" json:"size"`
 }

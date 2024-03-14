@@ -3,23 +3,29 @@ package controller
 import (
 	"NewThread/src/logic"
 	"NewThread/src/result"
-	"NewThread/src/utils"
+	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
 func UploadFile(c *gin.Context) {
+
 	header, err := c.FormFile("file")
+	filename := header.Filename
+	path := c.PostForm("path")
+	username := c.PostForm("username")
+
 	if err != nil {
+		fmt.Print(err)
 		result.CommonResp(c, http.StatusInternalServerError, result.InvalidParam, result.EmptyData)
 		return
 	}
-	path := c.PostForm("path")
-	username := c.PostForm("username")
-	filename := header.Filename
+
 	err = logic.NewFileService().UploadFile(header, path, username, filename)
 	if err != nil {
+		fmt.Print(err)
 		result.CommonResp(c, http.StatusInternalServerError, result.UploadFail, result.EmptyData)
 		return
 	}
@@ -27,23 +33,34 @@ func UploadFile(c *gin.Context) {
 }
 
 func DownloadFile(c *gin.Context) {
+
 	path := c.Query("path")
-	filename := c.Query("fileName")
-	data, err := utils.Download_File(path + filename)
+	fileuuid := c.Query("fileuuid")
+	filename := c.Query("filename")
+
+	// 把atOSS  string ----> bool
+	atOSS, err := strconv.ParseBool(c.Query("atOSS"))
 	if err != nil {
+		fmt.Print(err)
+		result.CommonResp(c, http.StatusInternalServerError, result.InvalidParam, result.EmptyData)
+		return
+	}
+
+	data, err := logic.NewFileService().DownloadFile(path, fileuuid, filename, atOSS)
+	if err != nil {
+		fmt.Print(err)
 		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
 		return
 	}
-	c.Header("Content-Type", "application/octet-stream")
-	c.Header("Content-Disposition", "attachment; filename="+filename) // 用来指定下载下来的文件名
-	c.Header("Content-Transfer-Encoding", "binary")
-	c.Writer.Write(data)
+	result.DownloadFileResp(c, http.StatusOK, filename, data)
 }
 
 func FileList(c *gin.Context) {
 	path := c.Query("path")
-	data, err := utils.FileList(path)
+
+	data, err := logic.NewFileService().FileList(path)
 	if err != nil {
+		fmt.Print(err)
 		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
 		return
 	}

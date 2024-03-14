@@ -3,12 +3,14 @@ package utils
 import (
 	"NewThread/src/pojo"
 	"io"
+	"os"
 
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/dustin/go-humanize"
 )
 
-func Download_File(FileName string) ([]byte, error) {
+// 从OSS里下载文件
+func Download_File_OSS(FileName string) ([]byte, error) {
 	bucket, err := client.Bucket(bucketName)
 	if err != nil {
 		return nil, err
@@ -28,7 +30,21 @@ func Download_File(FileName string) ([]byte, error) {
 	return data, nil
 }
 
-func FileList(path string) ([]pojo.FileList, error) {
+func Download_File_Server(path string, fileuuid string) ([]byte, error) {
+	file, err := os.Open(path + fileuuid)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	data, err := io.ReadAll(io.Reader(file))
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+func FileList_OSS(path string) ([]pojo.FileList, error) {
 	bucket, err := client.Bucket(bucketName)
 	var data []pojo.FileList
 	if err != nil {
@@ -47,11 +63,32 @@ func FileList(path string) ([]pojo.FileList, error) {
 			flag = true
 		} else {
 			var temp pojo.FileList
-			temp.FileName = object.Key
+			temp.Fileuuid = object.Key
 			temp.Size = humanize.Bytes(uint64(object.Size))
 			temp.UpdateTime = humanize.Time(object.LastModified)
 			data = append(data, temp)
 		}
 	}
 	return data, err
+}
+
+func FileList_ESC(path string) ([]pojo.FileList, error) {
+	var data []pojo.FileList
+	file, err := os.ReadDir(path)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, f := range file {
+		var temp pojo.FileList
+		fileInfo, err := os.Stat(path + f.Name())
+		if err != nil {
+			return nil, err
+		}
+		temp.Fileuuid = fileInfo.Name()
+		temp.UpdateTime = humanize.Time(fileInfo.ModTime())
+		temp.Size = humanize.Bytes(uint64(fileInfo.Size()))
+		data = append(data, temp)
+	}
+	return data, nil
 }

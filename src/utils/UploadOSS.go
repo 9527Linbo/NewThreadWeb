@@ -11,7 +11,9 @@ import (
 )
 
 /*
-简单文件上传（大小不超过5G，对并发上传性能要求不高）： 服务器端---->OSS
+简单文件上传（大小不超过5G，对并发上传性能要求不高）：
+
+	服务器端---->OSS
 */
 func Upload_Simple_File_Server_to_OSS() error {
 	// 填写存储空间名称，例如examplebucket。
@@ -29,7 +31,9 @@ func Upload_Simple_File_Server_to_OSS() error {
 }
 
 /*
-简单文件上传（大小不超过5G，对并发上传性能要求不高）： 客户端---->服务器端
+简单文件上传（大小不超过5G，对并发上传性能要求不高）：
+
+	客户端---->服务器端
 */
 func Upload_Simple_File_Clinet_to_Server(header *multipart.FileHeader, path string) (string, error) {
 

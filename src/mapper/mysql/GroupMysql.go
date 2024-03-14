@@ -50,7 +50,7 @@ func (c *GroupMysql) GroupStudentListAndWishesMysql(year int) ([]pojo.Student, e
 		"LEFT JOIN t_imageuser img ON img.user_id = s.user_id "+
 		"WHERE "+
 		"s.user_id = p.user_id "+
-		"AND s.year = ?", &year).Scan(&m).Error
+		"AND s.year = ?", year).Scan(&m).Error
 	if err != nil {
 		return []pojo.Student{}, err
 	}

@@ -20,6 +20,8 @@ func InitMysql() (err error) {
 		viper.GetString("mysql.port"),
 		viper.GetString("mysql.database"),
 	)
+
 	Db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+
 	return err
 }

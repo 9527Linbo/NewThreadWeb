@@ -3,7 +3,6 @@ package logic
 import (
 	mapper "NewThread/src/mapper/mysql"
 	"NewThread/src/pojo"
-	"fmt"
 )
 
 type GroupLogic struct{} //所有size为0的变量都用的是同一块内存  zerobase
@@ -17,20 +16,26 @@ func (c *GroupLogic) GroupInfo() ([]pojo.Group, error) {
 }
 
 func (c *GroupLogic) GroupTeacherInfo() ([]pojo.Teacher, error) {
+
 	//查询所有老师的姓名、负责小组、用户id
 	mes, err := mapper.NewGroupMysql().GroupTeacherListAndGroupMysql()
+
 	if err != nil {
 		return nil, err
 	}
-	fmt.Print(mes)
+
 	//根据老师的User_id循环查找position表.
 	for i := range mes {
+
 		position, err := mapper.NewGroupMysql().PositionByUserIdMysql(mes[i].Userid)
+
 		if err != nil {
 			return nil, err
 		}
+
 		mes[i].Position = position
 	}
+
 	return mes, err
 }
 

@@ -9,14 +9,17 @@ import (
 func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 	router := gin.Default()
 	router.Use(middlewares...)
+
+	// 路由组（团队）
 	group_router := router.Group("/groups")
 	{
-		group_router.GET("list", controller.GroupInfo)
-		group_router.GET("teachers", controller.GroupTeacherInfo)
-		group_router.GET("students", controller.GroupStudentInfo)
-		group_router.GET("yearlist", controller.Yearlist)
+		group_router.GET("list", controller.GroupInfo)            //团队信息
+		group_router.GET("teachers", controller.GroupTeacherInfo) //老师信息
+		group_router.GET("students", controller.GroupStudentInfo) //管理层学生信息
+		group_router.GET("yearlist", controller.Yearlist)         //届
 	}
 
+	// 路由组（荣誉）
 	honour_router := router.Group("/honours")
 	{
 		honour_router.GET("list", controller.HonoursList)
@@ -26,6 +29,7 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 		honour_router.GET("milestones", controller.HonoursMilestones)
 	}
 
+	// 路由组（帖子）
 	group_post_router := router.Group("/post")
 	{
 		//group_post_router.GET("/list", controller.PostInfo)
@@ -35,14 +39,17 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 		group_post_router.GET("/readshare", controller.ReadShare)
 		group_post_router.GET("/readnews", controller.ReadNews)
 		group_post_router.GET("/readactivity", controller.ReadActivity)
+
+		//帖子评论
+		group_post_router.GET("/comment", controller.CommentInfo_topThree) //获取评论及前三条次级评论
 	}
 
+	// 路由组（文件）
 	group_file_router := router.Group("/file")
 	{
-		group_file_router.POST("/upload", controller.UploadFile)
-		group_file_router.GET("/download", controller.DownloadFile)
-		group_file_router.GET("/list", controller.FileList)
+		group_file_router.POST("/upload", controller.UploadFile)    //上传文件
+		group_file_router.GET("/download", controller.DownloadFile) //下载文件
+		group_file_router.GET("/list", controller.FileList)         //获取文件列表
 	}
-
 	return router
 }
