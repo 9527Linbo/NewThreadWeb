@@ -80,3 +80,36 @@ func (c *FileLogic) FileList(path string) ([]pojo.FileList, error) {
 	}
 	return data, nil
 }
+
+func (c *FileLogic) UploadIcon(header *multipart.FileHeader, userid int, filename string) (string, error) {
+	_mysql := mapper.NewFileMysql()
+
+	//查询是否存在旧头像
+	oldfileuuid, err := _mysql.SearchFileUUIDById(userid)
+	if err != nil {
+		return "", err
+	}
+
+	if oldfileuuid != "" {
+		//删除旧文件，旧的数据库数据
+		if err := utils.DeleteIcon(oldfileuuid); err != nil {
+			return "", err
+		}
+		if err := _mysql.DeleteIcon(oldfileuuid); err != nil {
+			return "", err
+		}
+	}
+
+	//上传头像（直接上传到OSS）
+	url, fileuuid, err := utils.Upload_Simple_File_Clinet_to_OSS(header)
+	if err != nil {
+		return "", err
+	}
+
+	//插入数据库字段
+	err = _mysql.InsertIconMesg(url, fileuuid, userid)
+	if err != nil {
+		return "", err
+	}
+	return url, nil
+}

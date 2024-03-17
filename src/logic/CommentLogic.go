@@ -11,9 +11,9 @@ func NewCommentService() *CommentLogic {
 	return &CommentLogic{}
 }
 
-func (c *CommentLogic) CommentInfo_topThree(articleid int) ([]pojo.Comment_topthree, error) {
+func (c *CommentLogic) CommentInfo_topThree(postid int) ([]pojo.Comment_topthree, error) {
 
-	commentall, err := mapper.NewCommentMysql().CommentTopThreeMysql(articleid)
+	commentall, err := mapper.NewCommentMysql().CommentTopThreeMysql(postid)
 
 	if err != nil {
 		return nil, err
@@ -49,5 +49,15 @@ func (c *CommentLogic) CommentInfo_topThree(articleid int) ([]pojo.Comment_topth
 		}
 	}
 
+	return data, nil
+}
+
+func (c *CommentLogic) CommentInfo_All(postid int) ([]pojo.Comment, error) {
+
+	data, err := mapper.NewCommentMysql().CommentAllMysql(postid)
+
+	if err != nil {
+		return nil, err
+	}
 	return data, nil
 }

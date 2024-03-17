@@ -66,3 +66,28 @@ func FileList(c *gin.Context) {
 	}
 	result.CommonResp(c, http.StatusOK, result.Success, data)
 }
+
+func UploadIcon(c *gin.Context) {
+
+	header, err := c.FormFile("icon")
+	if err != nil {
+		fmt.Print(err)
+		result.CommonResp(c, http.StatusInternalServerError, result.InvalidParam, result.EmptyData)
+		return
+	}
+	filename := header.Filename
+	userid, err := strconv.Atoi(c.PostForm("userid"))
+	if err != nil {
+		fmt.Print(err)
+		result.CommonResp(c, http.StatusInternalServerError, result.InvalidParam, result.EmptyData)
+		return
+	}
+
+	url, err := logic.NewFileService().UploadIcon(header, userid, filename)
+	if err != nil {
+		fmt.Print(err)
+		result.CommonResp(c, http.StatusInternalServerError, result.UploadFail, result.EmptyData)
+		return
+	}
+	result.CommonResp(c, http.StatusOK, result.Success, url)
+}

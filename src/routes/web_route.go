@@ -41,7 +41,8 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 		group_post_router.GET("/readactivity", controller.ReadActivity)
 
 		//帖子评论
-		group_post_router.GET("/comment", controller.CommentInfo_topThree) //获取评论及前三条次级评论
+		group_post_router.GET("/comment", controller.CommentInfo_topThree) //获取顶级评论及前三条次级评论
+		group_post_router.GET("/allcomment", controller.CommentInfo_All)   //获取顶级评论及所有次级评论
 	}
 
 	// 路由组（文件）
@@ -50,6 +51,13 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 		group_file_router.POST("/upload", controller.UploadFile)    //上传文件
 		group_file_router.GET("/download", controller.DownloadFile) //下载文件
 		group_file_router.GET("/list", controller.FileList)         //获取文件列表
+	}
+
+	//头像
+	group_user_router := router.Group("/user")
+	{
+		group_user_router.POST("/icon/upload", controller.UploadIcon) //上传头像
+		group_user_router.GET("/icon", controller.UsersIcon)          //获取头像
 	}
 	return router
 }
