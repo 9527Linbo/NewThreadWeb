@@ -2,6 +2,7 @@ package mapper
 
 import (
 	"NewThread/src/pojo"
+	"errors"
 )
 
 type CommentMysql struct{}
@@ -36,4 +37,14 @@ func (c *CommentMysql) CommentAllMysql(commentid int) ([]pojo.Comment, error) {
 		return nil, err
 	}
 	return m, nil
+}
+
+func (c *CommentMysql) CommentUploadMysql(content string, userid int, articleid int, rootcommentid int, tocommentid int) error {
+	m := Db.Exec("INSERT INTO t_comment VALUES (NULL,?,0,?,?,0,?,?,NOW(),NOW());", content, userid, articleid, rootcommentid, tocommentid)
+
+	rowsaffected := m.RowsAffected
+	if rowsaffected == 0 {
+		return errors.New("Insert---Comment---Mesg---Error")
+	}
+	return nil
 }

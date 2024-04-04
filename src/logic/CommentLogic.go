@@ -61,3 +61,15 @@ func (c *CommentLogic) CommentInfo_All(postid int) ([]pojo.Comment, error) {
 	}
 	return data, nil
 }
+
+func (c *CommentLogic) Comment_Upload(comment pojo.Comment, postid int) error {
+
+	//在此次添加 “内容审核”
+
+	err := mapper.NewCommentMysql().CommentUploadMysql(comment.Content, comment.UserId, postid, comment.RootCommentId, comment.ToCommentId)
+
+	if err != nil {
+		return err
+	}
+	return nil
+}

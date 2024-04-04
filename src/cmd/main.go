@@ -3,6 +3,7 @@ package main
 import (
 	"NewThread/src/configs"
 	mapper "NewThread/src/mapper/mysql"
+	"NewThread/src/middle"
 	route "NewThread/src/routes"
 	utils "NewThread/src/utils"
 )
@@ -25,7 +26,7 @@ func main() {
 	}
 
 	// 路由
-	r := route.InitRouter(utils.Cors())
+	r := route.InitRouter(middle.Cors())
 	if err := r.Run(); err != nil {
 		panic(any("[Route Run Error] error: " + err.Error()))
 	}

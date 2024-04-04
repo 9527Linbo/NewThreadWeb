@@ -5,3 +5,8 @@ type UserIcon struct {
 	Name   string `gorm:"column:username" json:"Name"`
 	URL    string `gorm:"column:url" json:"URL"`
 }
+
+type RecvUserMsg struct {
+	Account string `json:"account" form:"account"`
+	Pwd     string `json:"-" form:"pwd"`
+}

@@ -14,3 +14,6 @@ File:
   ESCPath: /www/temp/
   OSSIconPath: icon/
   BaseURLOSS: https://newthreadoss.oss-cn-wulanchabu.aliyuncs.com/
+
+JWT:
+  TTL: 21600

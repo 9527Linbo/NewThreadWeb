@@ -91,11 +91,8 @@ func (c *FileLogic) UploadIcon(header *multipart.FileHeader, userid int, filenam
 	}
 
 	if oldfileuuid != "" {
-		//删除旧文件，旧的数据库数据
+		//删除旧文件
 		if err := utils.DeleteIcon(oldfileuuid); err != nil {
-			return "", err
-		}
-		if err := _mysql.DeleteIcon(oldfileuuid); err != nil {
 			return "", err
 		}
 	}
@@ -107,7 +104,7 @@ func (c *FileLogic) UploadIcon(header *multipart.FileHeader, userid int, filenam
 	}
 
 	//插入数据库字段
-	err = _mysql.InsertIconMesg(url, fileuuid, userid)
+	err = _mysql.InsertIconMesg(url, fileuuid, userid, mapper.Db)
 	if err != nil {
 		return "", err
 	}

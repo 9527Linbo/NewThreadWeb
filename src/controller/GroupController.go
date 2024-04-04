@@ -35,14 +35,14 @@ func GroupTeacherInfo(c *gin.Context) {
 
 func GroupStudentInfo(c *gin.Context) {
 
-	var req pojo.Year
+	var req pojo.Class
 
 	if err := c.ShouldBind(&req); err != nil {
 		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
 		return
 	}
 
-	data, err := logic.NewGroupService().GroupStudentInfo(req.Year)
+	data, err := logic.NewGroupService().GroupStudentInfo(req.Class)
 
 	if err != nil {
 		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)

@@ -24,7 +24,7 @@ func (c *GroupMysql) GroupListMysql() ([]pojo.Group, error) {
 */
 func (c *GroupMysql) GroupTeacherListAndGroupMysql() ([]pojo.Teacher, error) {
 	var m []pojo.Teacher
-	err := Db.Raw("SELECT t.user_id,t.`name`,g.name `group`,img.url FROM t_teacher t LEFT JOIN t_group g ON t.id = g.teacher_id LEFT JOIN t_imageuser img ON img.user_id = t.user_id ").Scan(&m).Error
+	err := Db.Raw("SELECT t.user_id,t.`name`,g.name `group`,img.url FROM t_teacher t LEFT JOIN t_group g ON t.id = g.teacher_id LEFT JOIN t_user img ON img.id = t.user_id ").Scan(&m).Error
 	if err != nil {
 		return []pojo.Teacher{}, err
 	}
@@ -41,16 +41,16 @@ func (c *GroupMysql) GroupStudentListAndWishesMysql(year int) ([]pojo.Student, e
 		"s.`name`,"+
 		"g.`name` `group`,"+
 		"s.user_id, "+
-		"s.year,"+
+		"s.class,"+
 		"img.url "+
 		"FROM "+
 		"t_position p,"+
 		"t_student s "+
 		"LEFT JOIN t_group g ON g.id = s.group_id "+
-		"LEFT JOIN t_imageuser img ON img.user_id = s.user_id "+
+		"LEFT JOIN t_user img ON img.id = s.user_id "+
 		"WHERE "+
 		"s.user_id = p.user_id "+
-		"AND s.year = ?", year).Scan(&m).Error
+		"AND s.class = ?", year).Scan(&m).Error
 	if err != nil {
 		return []pojo.Student{}, err
 	}
@@ -67,7 +67,7 @@ func (c *GroupMysql) PositionByUserIdMysql(userid int) ([]string, error) {
 
 func (c *GroupMysql) YearlistMysql() ([]int, error) {
 	var m []int
-	if err := Db.Raw("SELECT  DISTINCT year FROM t_student ").Scan(&m).Error; err != nil {
+	if err := Db.Raw("SELECT  DISTINCT class FROM t_student ").Scan(&m).Error; err != nil {
 		return nil, err
 	}
 	return m, nil

@@ -4,6 +4,8 @@ import (
 	"NewThread/src/pojo"
 	"errors"
 	"fmt"
+
+	"gorm.io/gorm"
 )
 
 type FileMysql struct{}
@@ -31,29 +33,20 @@ func (c *FileMysql) File(fileuuid string) (pojo.FileList, error) {
 	return m, nil
 }
 
-func (c *FileMysql) InsertIconMesg(url string, fileuuid string, userid int) error {
-	m := Db.Exec("INSERT INTO t_imageuser VALUES(null,?,?,?,NOW(),NOW())", url, fileuuid, userid)
+func (c *FileMysql) InsertIconMesg(url string, fileuuid string, userid int, db *gorm.DB) error {
+	m := db.Exec("UPDATE t_user SET url = ?, iconname = ?, update_time = NOW() WHERE id = ?", url, fileuuid, userid)
 	rowsaffected := m.RowsAffected
 	if rowsaffected == 0 {
-		return errors.New("Insert---Icon---Mesg---Error")
+		return errors.New("UPDATE---Icon---Mesg---Error")
 	}
 	return nil
 }
 
 func (c *FileMysql) SearchFileUUIDById(userid int) (string, error) {
 	var fileuuid string
-	err := Db.Raw("SELECT imagename FROM t_imageuser WHERE user_id =?", userid).Scan(&fileuuid).Error
+	err := Db.Raw("SELECT iconname FROM t_user WHERE id =?", userid).Scan(&fileuuid).Error
 	if err != nil {
 		return "", err
 	}
 	return fileuuid, nil
-}
-
-func (c *FileMysql) DeleteIcon(fileuuid string) error {
-	m := Db.Exec("DELETE FROM t_imageuser WHERE imagename = ?", fileuuid)
-	rowsaffected := m.RowsAffected
-	if rowsaffected == 0 {
-		return errors.New("Delete---Icon---Mesg---Error")
-	}
-	return nil
 }

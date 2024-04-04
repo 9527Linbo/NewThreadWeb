@@ -30,10 +30,10 @@ func (c *PostPageMysql) PageShareMysql(current_page, page_size string) (*pojo.Pa
 	FROM t_article a
 	LEFT JOIN (
 	  SELECT article_id, MIN(id) AS min_id
-	  FROM t_imagearticle
+	  FROM t_articleimage
 	  GROUP BY article_id
 	) i_min ON a.id = i_min.article_id
-	LEFT JOIN t_imagearticle i ON i_min.article_id = i.article_id AND i_min.min_id = i.id
+	LEFT JOIN t_articleimage i ON i_min.article_id = i.article_id AND i_min.min_id = i.id
 	WHERE a.type = 1 LIMIT ` + strconv.Itoa((c_page-1)*p_size) + ", " + strconv.Itoa(p_size)).Scan(&post).Error
 	if err != nil {
 		return nil, err
@@ -94,10 +94,10 @@ func (c *PostPageMysql) PageActivityMysql(current_page, page_size string) (*pojo
 	FROM t_article a
 	LEFT JOIN (
 	  SELECT article_id, MIN(id) AS min_id
-	  FROM t_imagearticle
+	  FROM t_articleimage
 	  GROUP BY article_id
 	) i_min ON a.id = i_min.article_id
-	LEFT JOIN t_imagearticle i ON i_min.article_id = i.article_id AND i_min.min_id = i.id
+	LEFT JOIN t_articleimage i ON i_min.article_id = i.article_id AND i_min.min_id = i.id
 	WHERE a.type = 3 LIMIT ` + strconv.Itoa((c_page-1)*p_size) + ", " + strconv.Itoa(p_size)).Scan(&post).Error
 	if err != nil {
 		return nil, err

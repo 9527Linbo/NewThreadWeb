@@ -5,10 +5,10 @@ type Student struct {
 	URL      string      `gorm:"column:url" json:"URL"`
 	Userid   int         `gorm:"column:user_id" json:"User_id"`
 	Group    string      `gorm:"column:group" json:"Group"`
-	Year     int         `gorm:"column:year" json:"year"`
+	Class    int         `gorm:"column:Class" json:"Class"`
 	Position interface{} `gorm:"-" json:"Position"`
 }
 
-type Year struct {
-	Year int `form:"year"`
+type Class struct {
+	Class int `form:"class"`
 }

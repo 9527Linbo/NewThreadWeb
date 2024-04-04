@@ -71,7 +71,6 @@ func UploadIcon(c *gin.Context) {
 
 	header, err := c.FormFile("icon")
 	if err != nil {
-		fmt.Print(err)
 		result.CommonResp(c, http.StatusInternalServerError, result.InvalidParam, result.EmptyData)
 		return
 	}

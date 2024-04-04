@@ -16,6 +16,7 @@ const (
 	ServerBusy
 	UploadFail
 	RecordNotFound
+	RefusedRequest
 )
 
 // 业务逻辑状态信息描述
@@ -28,6 +29,7 @@ var recodeText = map[ResCode]string{
 	ServerBusy:        "服务繁忙",
 	UploadFail:        "上传失败",
 	RecordNotFound:    "找不到记录",
+	RefusedRequest:    "拒绝请求",
 }
 
 // StatusText 返回状态码的文本。如果代码为空或未知状态码则返回error

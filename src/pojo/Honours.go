@@ -37,7 +37,6 @@ type ImgURL struct {
 }
 
 type ProjectHonours struct {
-	Name string `gorm:"column:name" json:"Name"`
 	Rank string `gorm:"column:rank" json:"Rank"`
 	Time string `gorm:"column:time" json:"Time"`
 }
