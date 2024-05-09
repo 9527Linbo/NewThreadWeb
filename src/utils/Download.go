@@ -4,6 +4,7 @@ import (
 	"NewThread/src/pojo"
 	"io"
 	"os"
+	"path/filepath"
 
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/dustin/go-humanize"
@@ -63,7 +64,7 @@ func FileList_OSS(path string) ([]pojo.FileList, error) {
 			flag = true
 		} else {
 			var temp pojo.FileList
-			temp.Fileuuid = object.Key
+			temp.Fileuuid = filepath.Base(object.Key)
 			temp.Size = humanize.Bytes(uint64(object.Size))
 			temp.UpdateTime = humanize.Time(object.LastModified)
 			data = append(data, temp)

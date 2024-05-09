@@ -3,7 +3,7 @@ mysql:
   port: 3306
   username: root
   password: 952759
-  database: newthread
+  database: nt2024
 
 
 OSS:
@@ -12,8 +12,16 @@ OSS:
 
 File:
   ESCPath: /www/temp/
+  PublicKeyFileName: 2.txt
+  PrivateKeyFileName: 1.txt
+  OSSUploadPath: file/
   OSSIconPath: icon/
+  OSSSPostImg: postimg/
+  OSSHonourImg: honoursimage/
   BaseURLOSS: https://newthreadoss.oss-cn-wulanchabu.aliyuncs.com/
 
 JWT:
   TTL: 21600
+  Secret: NEWTHREAD
+
+PORT: 2488

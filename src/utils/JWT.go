@@ -2,7 +2,6 @@ package utils
 
 import (
 	"NewThread/src/pojo"
-	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt"
@@ -14,12 +13,13 @@ type MyClaims struct {
 	jwt.StandardClaims        // claims设置项
 }
 
-var TokenExpireDuration int                    //JWT有效时间
-var MySecret = []byte(os.Getenv("JWT_SECRET")) // 签名的密钥（从系统环境变量中读取）
+var TokenExpireDuration int //JWT有效时间
+var MySecret []byte         // 签名的密钥
 
 // 生成JWT令牌
 func GenerateToken(usermsg pojo.RecvUserMsg) (string, error) {
 	TokenExpireDuration = viper.GetInt("JWT.TTL")                                 //默认6小时
+	MySecret = []byte(viper.GetString("JWT.Secret"))                              //密钥
 	expiresat := time.Now().Add(time.Duration(TokenExpireDuration) * time.Second) // 六小时后
 	claims := &MyClaims{
 		Account: usermsg.Account, //用户账号信息（不建议展示密码信息）

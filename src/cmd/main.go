@@ -6,6 +6,8 @@ import (
 	"NewThread/src/middle"
 	route "NewThread/src/routes"
 	utils "NewThread/src/utils"
+
+	"github.com/spf13/viper"
 )
 
 func main() {
@@ -25,9 +27,16 @@ func main() {
 		panic(any("OSS init error: " + err.Error()))
 	}
 
+	// 读取公钥
+	if err := utils.ReadKey(); err != nil {
+		panic(any("Read publicKey error: " + err.Error()))
+	}
+
+	port := viper.GetString("PORT")
 	// 路由
 	r := route.InitRouter(middle.Cors())
-	if err := r.Run(); err != nil {
+	if err := r.Run(":" + port); err != nil {
 		panic(any("[Route Run Error] error: " + err.Error()))
 	}
+
 }

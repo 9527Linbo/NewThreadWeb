@@ -10,3 +10,9 @@ type RecvUserMsg struct {
 	Account string `json:"account" form:"account"`
 	Pwd     string `json:"-" form:"pwd"`
 }
+
+type User struct {
+	UserIcon
+	Identity  string `gorm:"column:identity" json:"Identity"`
+	CreatTime string `gorm:"column:create_Time" json:"CreatTime"`
+}

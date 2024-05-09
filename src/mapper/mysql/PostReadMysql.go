@@ -2,6 +2,9 @@ package mapper
 
 import (
 	"NewThread/src/pojo"
+	"errors"
+
+	"gorm.io/gorm"
 )
 
 type PostReadMysql struct{}
@@ -53,4 +56,15 @@ func (*PostReadMysql) URLPostByPostIdMysql(id string) (*[]pojo.Url, error) {
 		return nil, err
 	}
 	return &data, nil
+}
+
+func (*PostReadMysql) InsertArticle(postmsg pojo.T_article, db *gorm.DB) (int, error) {
+	m := db.Create(&postmsg)
+	rowsaffected := m.RowsAffected
+
+	if rowsaffected == 0 {
+		return 0, errors.New("Insert---Graduate---Mesg---Error")
+	}
+	return postmsg.Id, nil
+
 }

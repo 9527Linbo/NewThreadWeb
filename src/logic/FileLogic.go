@@ -17,14 +17,16 @@ func NewFileService() *FileLogic {
 
 func (c *FileLogic) UploadFile(header *multipart.FileHeader, path string, username string, filename string) error {
 
+	path = viper.GetString("File.OSSUploadPath") + path
+
 	//上传文件
-	fileuuid, err := utils.Upload_Simple_File_Clinet_to_Server(header, path)
+	url, fileuuid, err := utils.Upload_Simple_File_Clinet_to_OSS(header, path)
 	if err != nil {
 		return err
 	}
 
 	//插入数据库字段
-	err = mapper.NewFileMysql().InsertFileMesg(filename, fileuuid, username)
+	err = mapper.NewFileMysql().InsertFileMesg(filename, fileuuid, username, url)
 	if err != nil {
 		return err
 	}
@@ -32,6 +34,8 @@ func (c *FileLogic) UploadFile(header *multipart.FileHeader, path string, userna
 }
 
 func (c *FileLogic) DownloadFile(path string, fileuuid string, filename string, atOSS bool) (data []byte, err error) {
+
+	path = viper.GetString("File.OSSUploadPath") + path
 
 	if atOSS { //文件在OSS里
 		data, err = utils.Download_File_OSS(fileuuid)
@@ -48,21 +52,22 @@ func (c *FileLogic) DownloadFile(path string, fileuuid string, filename string, 
 
 func (c *FileLogic) FileList(path string) ([]pojo.FileList, error) {
 
-	data_OSS, err := utils.FileList_OSS(path)
+	basepath := viper.GetString("File.OSSUploadPath")
+	data, err := utils.FileList_OSS(basepath + path)
 
 	if err != nil {
 		return nil, err
 	}
 
-	basepath := viper.GetString("File.ESCPath")
+	// basepath := viper.GetString("File.ESCPath")
 
-	data_ESC, err := utils.FileList_ESC(basepath + path)
+	// data_ESC, err := utils.FileList_ESC(basepath + path)
 
-	if err != nil {
-		return nil, err
-	}
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	data := append(data_ESC, data_OSS...)
+	// data := append(data_ESC, data_OSS...)
 
 	mysql := mapper.NewFileMysql()
 	//做个分页查询？
@@ -77,6 +82,7 @@ func (c *FileLogic) FileList(path string) ([]pojo.FileList, error) {
 		//data[i].AtOSS = temp.AtOSS
 		data[i].Filename = temp.Filename
 		data[i].Username = temp.Username
+		data[i].URL = temp.URL
 	}
 	return data, nil
 }
@@ -98,13 +104,47 @@ func (c *FileLogic) UploadIcon(header *multipart.FileHeader, userid int, filenam
 	}
 
 	//上传头像（直接上传到OSS）
-	url, fileuuid, err := utils.Upload_Simple_File_Clinet_to_OSS(header)
+	url, fileuuid, err := utils.Upload_Simple_File_Clinet_to_OSS(header, viper.GetString("File.OSSIconPath"))
 	if err != nil {
 		return "", err
 	}
 
 	//插入数据库字段
 	err = _mysql.InsertIconMesg(url, fileuuid, userid, mapper.Db)
+	if err != nil {
+		return "", err
+	}
+	return url, nil
+}
+
+func (c *FileLogic) UploadPostImg(header *multipart.FileHeader, postid int) (string, error) {
+	_mysql := mapper.NewFileMysql()
+
+	//上传图片（直接上传到OSS）
+	url, _, err := utils.Upload_Simple_File_Clinet_to_OSS(header, viper.GetString("File.OSSSPostImg"))
+	if err != nil {
+		return "", err
+	}
+
+	//插入数据库字段
+	err = _mysql.InsertPostImgMesg(url, postid, mapper.Db)
+	if err != nil {
+		return "", err
+	}
+	return url, nil
+}
+
+func (c *FileLogic) UploadHonourImg(header *multipart.FileHeader, honourid int) (string, error) {
+	_mysql := mapper.NewFileMysql()
+
+	//上传图片（直接上传到OSS）
+	url, _, err := utils.Upload_Simple_File_Clinet_to_OSS(header, viper.GetString("File.OSSHonourImg"))
+	if err != nil {
+		return "", err
+	}
+
+	//插入数据库字段
+	err = _mysql.InsertHonourImgMesg(url, honourid, mapper.Db)
 	if err != nil {
 		return "", err
 	}

@@ -60,7 +60,6 @@ func FileList(c *gin.Context) {
 
 	data, err := logic.NewFileService().FileList(path)
 	if err != nil {
-		fmt.Print(err)
 		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
 		return
 	}
@@ -83,6 +82,29 @@ func UploadIcon(c *gin.Context) {
 	}
 
 	url, err := logic.NewFileService().UploadIcon(header, userid, filename)
+	if err != nil {
+		fmt.Print(err)
+		result.CommonResp(c, http.StatusInternalServerError, result.UploadFail, result.EmptyData)
+		return
+	}
+	result.CommonResp(c, http.StatusOK, result.Success, url)
+}
+
+func PostImgUpload(c *gin.Context) {
+
+	img, err := c.FormFile("image")
+	if err != nil {
+		result.CommonResp(c, http.StatusInternalServerError, result.InvalidParam, result.EmptyData)
+		return
+	}
+	postid, err := strconv.Atoi(c.PostForm("id"))
+	if err != nil {
+		fmt.Print(err)
+		result.CommonResp(c, http.StatusInternalServerError, result.InvalidParam, result.EmptyData)
+		return
+	}
+
+	url, err := logic.NewFileService().UploadPostImg(img, postid)
 	if err != nil {
 		fmt.Print(err)
 		result.CommonResp(c, http.StatusInternalServerError, result.UploadFail, result.EmptyData)

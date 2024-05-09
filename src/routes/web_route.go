@@ -13,27 +13,24 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 
 	router.POST("/login", controller.Login)
 	router.POST("/register", controller.Register)
-	router.POST("/register/teacher", controller.RegisterTeacher)
 
 	// 路由组（团队）
 	group_router := router.Group("/groups")
-	group_router.Use(middle.JWTAuth) //登录校验
+	group_router.Use() //登录校验
 	{
-		group_router.GET("list", controller.GroupInfo)            //团队信息
-		group_router.GET("teachers", controller.GroupTeacherInfo) //老师信息
-		group_router.GET("students", controller.GroupStudentInfo) //管理层学生信息
-		group_router.GET("yearlist", controller.Yearlist)         //届
+		group_router.GET("list", controller.GroupInfo) //团队信息
 	}
 
 	// 路由组（荣誉）
 	honour_router := router.Group("/honours")
-	honour_router.Use(middle.JWTAuth)
+	honour_router.Use()
 	{
 		honour_router.GET("list", controller.HonoursList)
-		honour_router.GET("students", controller.HonoursStudents)
+		honour_router.GET("graduate", controller.HonoursGraduate)
 		honour_router.GET("projects", controller.HonoursProjects)
 		honour_router.GET("milestone", controller.HonoursMilestone)
 		honour_router.GET("milestones", controller.HonoursMilestones)
+		honour_router.POST("image", controller.HonoursImgUpload) //上传里程碑、科研项目图片
 	}
 
 	// 路由组（帖子）
@@ -52,6 +49,8 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 		group_post_router.GET("/comment", controller.CommentInfo_topThree) //获取顶级评论及前三条次级评论
 		group_post_router.GET("/allcomment", controller.CommentInfo_All)   //获取顶级评论及所有次级评论
 		group_post_router.POST("/comment", controller.Comment_Upload)      //上传评论
+
+		group_post_router.POST("/image", controller.PostImgUpload) //上传帖子图片
 	}
 
 	// 路由组（文件）
@@ -67,6 +66,7 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 	group_user_router := router.Group("/user")
 	group_user_router.Use(middle.JWTAuth)
 	{
+		group_user_router.GET("/list", controller.UserList)           //用户列表
 		group_user_router.POST("/icon/upload", controller.UploadIcon) //上传头像
 		group_user_router.GET("/icon", controller.UsersIcon)          //获取头像
 	}
@@ -79,8 +79,18 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 		group_add_router.POST("/student", controller.AddStudent)     //增添学生信息
 		group_add_router.POST("/graduate", controller.AddGraduate)   //增添毕业生信息
 		group_add_router.POST("/milestone", controller.AddMilestone) //增添里程碑
-
+		group_add_router.POST("/honour", controller.AddHonour)       //增添比赛获取情况
+		group_add_router.POST("/project", controller.AddMilestone)   //增添科研项目
+		group_add_router.POST("/post", controller.AddPost)           //增添帖子
 	}
 
+	group_del_router := router.Group("/del")
+	group_del_router.Use(middle.JWTAuth)
+	{
+		group_del_router.DELETE("/user", controller.DelUser)         //删除普通用户
+		group_del_router.DELETE("/teacher", controller.DelTeacher)   //删除老师
+		group_del_router.DELETE("/student", controller.DelStudent)   //删除老师
+		group_del_router.DELETE("/graduate", controller.DelGraduate) //删除优秀毕业生
+	}
 	return router
 }

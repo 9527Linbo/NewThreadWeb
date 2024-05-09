@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"gorm.io/gorm"
+	"github.com/spf13/viper"
 )
 
 type UserLogic struct{} //所有size为0的变量都用的是同一块内存  zerobase
@@ -26,13 +26,19 @@ func (c *UserLogic) UserIcon(userids []int) ([]pojo.UserIcon, error) {
 }
 
 func (c *UserLogic) UserLogin(usermsg pojo.RecvUserMsg) (string, error) {
-	//密码加密（未完成）
 
 	//查数据库是否有该用户
 	userpwd, err := mapper.NewUserMysql().UserPwd(usermsg.Account)
 	if err != nil {
 		return "", err
 	}
+
+	//解密
+	userpwd, err = utils.RsaDecryptBase64(userpwd)
+	if err != nil {
+		return "", err
+	}
+
 	//密码比较
 	if strings.Compare(userpwd, usermsg.Pwd) != 0 {
 		return "账号或密码错误", nil
@@ -56,48 +62,16 @@ func (c *UserLogic) RegisterUser(usermsg pojo.RecvUserMsg) (string, error) {
 		return "账号已存在", nil
 	}
 	//密码加密
+	usermsg.Pwd, err = utils.RsaEncryptBase64(usermsg.Pwd)
+	if err != nil {
+		return "", err
+	}
 
 	//用户名默认是账号
 
 	//存入数据库的user表
 	usermsgMysql := pojo.T_user{Username: usermsg.Account, Account: usermsg.Account, Pwd: usermsg.Pwd, CreatTime: time.Now(), UpdateTime: time.Now()}
-	_, err = mapper.NewUserMysql().RegisterUser(usermsgMysql)
-	if err != nil {
-		return "", err
-	}
-	return usermsg.Account, nil
-}
-
-func (c *UserLogic) RegisterTeacher(usermsg pojo.RecvUserMsg, name string) (string, error) {
-	//验证账号是否唯一
-	pwd, err := mapper.NewUserMysql().UserPwd(usermsg.Account)
-	if err != nil {
-		return "", err
-	}
-	if pwd != "" {
-		return "账号已存在", nil
-	}
-	//密码加密
-
-	//用户名默认是账号
-	//开启事务回滚
-	err = mapper.Db.Transaction(func(tx *gorm.DB) error {
-		//存入数据库的user表
-		usermsgMysql := pojo.T_user{Username: usermsg.Account, Account: usermsg.Account, Pwd: usermsg.Pwd, CreatTime: time.Now(), UpdateTime: time.Now()}
-		id, err := mapper.NewUserMysql().RegisterUser(usermsgMysql)
-		if err != nil {
-			// 返回err 会自动回滚事务
-			return err
-		}
-		//存入数据库的teacher表
-		err = mapper.NewUserMysql().RegisterTeacher(name, id)
-		if err != nil {
-			return err
-		}
-		// 返回nil 则提交事务
-		return nil
-	})
-
+	_, err = mapper.NewUserMysql().RegisterUser(usermsgMysql, mapper.Db)
 	if err != nil {
 		return "", err
 	}
@@ -140,7 +114,7 @@ func (c *UserLogic) AddTeacher(teachermsg pojo.T_teacher, account string, group 
 	}
 
 	//上传头像
-	url, fileuuid, err := utils.Upload_Simple_File_Clinet_to_OSS(icon)
+	url, fileuuid, err := utils.Upload_Simple_File_Clinet_to_OSS(icon, viper.GetString("File.OSSIconPath"))
 	if err != nil {
 		// 返回err 会自动回滚事务
 		tx.Rollback()
@@ -197,7 +171,7 @@ func (c *UserLogic) AddStudent(studentmsg pojo.T_student, account string, group 
 	student.Position = studentmsg.Position
 
 	//上传头像
-	url, fileuuid, err := utils.Upload_Simple_File_Clinet_to_OSS(icon)
+	url, fileuuid, err := utils.Upload_Simple_File_Clinet_to_OSS(icon, viper.GetString("File.OSSIconPath"))
 	if err != nil {
 		// 返回err 会自动回滚事务
 		tx.Rollback()
@@ -230,7 +204,7 @@ func (c *UserLogic) AddGraduate(graduatemsg pojo.T_graduate, account string, ico
 	}
 	_mysql := mapper.NewUserMysql()
 
-	url, _, err := utils.Upload_Simple_File_Clinet_to_OSS(icon)
+	url, _, err := utils.Upload_Simple_File_Clinet_to_OSS(icon, viper.GetString("File.OSSIconPath"))
 	if err != nil {
 		return pojo.StudentHonours{}, err
 	}
@@ -249,4 +223,103 @@ func (c *UserLogic) AddGraduate(graduatemsg pojo.T_graduate, account string, ico
 	graduate.URL = graduatemsg.Url
 
 	return graduate, nil
+}
+
+func (c *UserLogic) UserList() (userlist []pojo.User, err error) {
+	userlist, err = mapper.NewUserMysql().UserList()
+	if err != nil {
+		return nil, err
+	}
+	return userlist, nil
+}
+
+func (c *UserLogic) DelUser(userid string) error {
+	icon, err := mapper.NewUserMysql().DelUser(userid, mapper.Db)
+
+	//删除阿里云oss里的头像文件
+	if err := utils.DeleteIcon(icon); err != nil {
+		return err
+	}
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (c *UserLogic) DelTeacher(userid string, delAccount bool) error {
+	//开启事务回滚
+	tx := mapper.Db.Begin()
+
+	//删除老师信息
+	err := mapper.NewUserMysql().DelTeacher(userid, tx)
+	if err != nil {
+		return err
+	}
+	if !delAccount {
+		tx.Commit()
+		return nil
+	}
+	//删除账号
+	icon, err := mapper.NewUserMysql().DelUser(userid, tx)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	//删除阿里云oss里的头像文件
+	if err := utils.DeleteIcon(icon); err != nil {
+		return err
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	return nil
+}
+
+func (c *UserLogic) DelStudent(userid string, delAccount bool) error {
+	//开启事务回滚
+	tx := mapper.Db.Begin()
+
+	//删除学生信息
+	err := mapper.NewUserMysql().DelStudent(userid, tx)
+	if err != nil {
+		return err
+	}
+	if !delAccount {
+		tx.Commit()
+		return nil
+	}
+	//删除账号
+	icon, err := mapper.NewUserMysql().DelUser(userid, tx)
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	//删除阿里云oss里的头像文件
+	if err := utils.DeleteIcon(icon); err != nil {
+		return err
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	return nil
+}
+
+func (c *UserLogic) DelGraduate(graduateId string) error {
+	//删除毕业生信息
+	icon, err := mapper.NewUserMysql().DelGraduate(graduateId, mapper.Db)
+	if err != nil {
+		return err
+	}
+	//删除阿里云oss里的头像文件
+	if err := utils.DeleteIcon(icon); err != nil {
+		return err
+	}
+	return nil
 }

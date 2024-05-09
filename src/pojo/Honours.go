@@ -1,7 +1,5 @@
 package pojo
 
-import "time"
-
 type HonoursTeam struct {
 	HonoursTeam string `gorm:"column:teamname" json:"TeamName"`
 	Number      int    `gorm:"column:number" json:"Number"`
@@ -13,23 +11,24 @@ type Honours struct {
 	Name        string        `gorm:"column:name" json:"Name"`
 	TeacherName string        `gorm:"column:teacher" json:"TeacherName"`
 	Group       string        `gorm:"column:group" json:"Group"`
-	StartTime   time.Time     `gorm:"column:start_time" json:"StartTime"`
+	StartTime   string        `gorm:"column:start_time" json:"StartTime"`
 	TeamMessage []HonoursTeam `gorm:"-" json:"HonoursTeams"`
 }
 
 type StudentHonours struct {
+	ID          string `gorm:"column:id" json:"ID"`
 	Name        string `gorm:"column:name" json:"Name"`
 	URL         string `gorm:"column:url" json:"URL"`
 	Description string `gorm:"column:description" json:"Description"`
 }
 
 type Project struct {
-	ID          int              `gorm:"column:id" json:"ID"`
-	Name        string           `gorm:"column:name" json:"Name"`
-	Description string           `gorm:"column:description" json:"Description"`
+	ID          int              `gorm:"column:id"`
+	Name        string           `gorm:"column:name" json:"name"`
+	Description string           `gorm:"column:description" json:"description"`
 	Type        string           `gorm:"column:type" json:"type"`
-	URL         []ImgURL         `gorm:"-" json:"URL"`
-	Honours     []ProjectHonours `gorm:"-" json:"ProjectHonours"`
+	URL         []ImgURL         `gorm:"-" json:"url"`
+	Honours     []ProjectHonours `gorm:"-" json:"projectHonours"`
 }
 
 type ImgURL struct {
@@ -37,6 +36,6 @@ type ImgURL struct {
 }
 
 type ProjectHonours struct {
-	Rank string `gorm:"column:rank" json:"Rank"`
-	Time string `gorm:"column:time" json:"Time"`
+	Rank string `gorm:"column:rank" json:"rank"`
+	Time string `gorm:"column:time" json:"time"`
 }

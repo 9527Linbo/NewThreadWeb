@@ -85,7 +85,7 @@ func Upload_Simple_File_Clinet_to_Server(header *multipart.FileHeader, path stri
 	客户端---->服务器端
 	用于人物头像上传
 */
-func Upload_Simple_File_Clinet_to_OSS(header *multipart.FileHeader) (url, fileuuid string, err error) {
+func Upload_Simple_File_Clinet_to_OSS(header *multipart.FileHeader, path string) (url, fileuuid string, err error) {
 
 	filename := header.Filename
 
@@ -101,8 +101,7 @@ func Upload_Simple_File_Clinet_to_OSS(header *multipart.FileHeader) (url, fileuu
 	//文件uuid = uuid + 后缀名
 	fileuuid = _uuid.String() + ext
 
-	//拿到OSS人物头像文件储存的基础路径
-	path := viper.GetString("File.OSSIconPath")
+	//拿到OSS人物头像文件储存的基础路径 path
 
 	//将内容 写入 context
 	context, err := header.Open()
@@ -111,7 +110,6 @@ func Upload_Simple_File_Clinet_to_OSS(header *multipart.FileHeader) (url, fileuu
 	}
 
 	objectname := path + fileuuid
-	print(objectname)
 	//上传到OSS
 	bucket, err := client.Bucket(bucketName)
 	err = bucket.PutObject(objectname, context)

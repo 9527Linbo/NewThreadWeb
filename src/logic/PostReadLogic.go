@@ -4,6 +4,7 @@ import (
 	mapper "NewThread/src/mapper/mysql"
 	"NewThread/src/pojo"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -61,4 +62,36 @@ func (c *PostReadLogic) ReadActivityInfo(ctx *gin.Context) (*pojo.Post, error) {
 	}
 	post.PostImgUrl = GetImageURL(id)
 	return post, err
+}
+
+func (c *PostReadLogic) AddPost(postmsg pojo.T_article) (pojo.Post, error) {
+
+	//完善postmsg
+	postmsg.CreatTime = time.Now()
+	postmsg.UpdateTime = time.Now()
+
+	//插入数据库T_article表
+	postid, err := mapper.NewPostReadMysql().InsertArticle(postmsg, mapper.Db)
+	if err != nil {
+		return pojo.Post{}, err
+	}
+
+	//查询用户信息
+	userid := []int{postmsg.UserId}
+	user, err := mapper.NewUserMysql().UserIcon(userid)
+	if err != nil {
+		return pojo.Post{}, err
+	}
+
+	//完善返回信息
+	return pojo.Post{
+		Postid:     int64(postid),
+		Title:      postmsg.Title,
+		Content:    postmsg.Content,
+		UpdateTime: postmsg.UpdateTime,
+		CreateTime: postmsg.CreatTime,
+		UserName:   user[0].Name,
+		UserImgUrl: user[0].URL,
+	}, nil
+
 }
