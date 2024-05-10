@@ -135,6 +135,22 @@ func AddPost(c *gin.Context) {
 	result.CommonResp(c, http.StatusOK, result.Success, data)
 }
 
+func CreatPostID(c *gin.Context) {
+	tpyeid, err := strconv.Atoi(c.Query("tpye"))
+	if err != nil {
+		fmt.Print(err)
+		result.CommonResp(c, http.StatusInternalServerError, result.InvalidParam, result.EmptyData)
+		return
+	}
+
+	data, err := logic.NewPostReadService().CreatPostID(tpyeid)
+	if err != nil {
+		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, err.Error())
+		return
+	}
+	result.CommonResp(c, http.StatusOK, result.Success, data)
+}
+
 func HonoursImgUpload(c *gin.Context) {
 
 	img, err := c.FormFile("image")

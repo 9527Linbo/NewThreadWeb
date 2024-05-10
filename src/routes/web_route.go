@@ -34,8 +34,9 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 	}
 
 	// 路由组（帖子）
+	//middle.JWTAuth
 	group_post_router := router.Group("/post")
-	group_post_router.Use(middle.JWTAuth)
+	group_post_router.Use()
 	{
 		//group_post_router.GET("/list", controller.PostInfo)
 		group_post_router.GET("/sharelist", controller.PageShareInfo)
@@ -52,10 +53,10 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 
 		group_post_router.POST("/image", controller.PostImgUpload) //上传帖子图片
 	}
-
+	//middle.JWTAuth
 	// 路由组（文件）
 	group_file_router := router.Group("/file")
-	group_file_router.Use(middle.JWTAuth)
+	group_file_router.Use()
 	{
 		group_file_router.POST("/upload", controller.UploadFile)    //上传文件
 		group_file_router.GET("/download", controller.DownloadFile) //下载文件
@@ -70,10 +71,10 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 		group_user_router.POST("/icon/upload", controller.UploadIcon) //上传头像
 		group_user_router.GET("/icon", controller.UsersIcon)          //获取头像
 	}
-
+	//middle.JWTAuth
 	//增添信息
 	group_add_router := router.Group("/add")
-	group_add_router.Use(middle.JWTAuth)
+	group_add_router.Use()
 	{
 		group_add_router.POST("/teacher", controller.AddTeacher)     //增添老师信息
 		group_add_router.POST("/student", controller.AddStudent)     //增添学生信息
@@ -82,15 +83,17 @@ func InitRouter(middlewares ...gin.HandlerFunc) *gin.Engine {
 		group_add_router.POST("/honour", controller.AddHonour)       //增添比赛获取情况
 		group_add_router.POST("/project", controller.AddMilestone)   //增添科研项目
 		group_add_router.POST("/post", controller.AddPost)           //增添帖子
+		group_add_router.GET("/postid", controller.CreatPostID)      //创建帖子，返回id
 	}
-
+	//middle.JWTAuth
 	group_del_router := router.Group("/del")
-	group_del_router.Use(middle.JWTAuth)
+	group_del_router.Use()
 	{
 		group_del_router.DELETE("/user", controller.DelUser)         //删除普通用户
 		group_del_router.DELETE("/teacher", controller.DelTeacher)   //删除老师
 		group_del_router.DELETE("/student", controller.DelStudent)   //删除老师
 		group_del_router.DELETE("/graduate", controller.DelGraduate) //删除优秀毕业生
 	}
+
 	return router
 }

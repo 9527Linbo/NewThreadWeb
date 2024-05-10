@@ -131,9 +131,9 @@ func (c *UserMysql) SearhcUserName(userid int) (string, error) {
 
 func (c *UserMysql) UserList() ([]pojo.User, error) {
 	var m []pojo.User
-	err := Db.Raw("SELECT u.id,u.username,s.name,u.create_Time,u.url ,'学生' AS identity FROM t_user u INNER JOIN t_student s ON u.id = s.user_id UNION" +
-		" SELECT u.id,u.username,t.name,u.create_Time,u.url ,'老师' AS identity FROM t_user u INNER JOIN t_teacher t ON u.id = t.user_id UNION" +
-		" SELECT u.id,u.username,u.username,u.create_Time,u.url ,'普通用户' AS identity FROM t_user u WHERE u.id NOT IN (SELECT user_id FROM t_student UNION" +
+	err := Db.Raw("SELECT u.id,s.name as username,u.create_Time,u.url ,'学生' AS identity FROM t_user u INNER JOIN t_student s ON u.id = s.user_id UNION" +
+		" SELECT u.id,t.name as username,u.create_Time,u.url ,'老师' AS identity FROM t_user u INNER JOIN t_teacher t ON u.id = t.user_id UNION" +
+		" SELECT u.id,u.username,u.create_Time,u.url ,'普通用户' AS identity FROM t_user u WHERE u.id NOT IN (SELECT user_id FROM t_student UNION" +
 		" SELECT user_id FROM t_teacher);").Scan(&m).Error
 	if err != nil {
 		return nil, err

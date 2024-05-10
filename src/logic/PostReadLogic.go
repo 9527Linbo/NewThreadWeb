@@ -95,3 +95,16 @@ func (c *PostReadLogic) AddPost(postmsg pojo.T_article) (pojo.Post, error) {
 	}, nil
 
 }
+
+func (c *PostReadLogic) CreatPostID(typeid int) (postid int, err error) {
+
+	var postmsg pojo.T_article
+	postmsg.Type = typeid
+
+	//插入数据库T_article表
+	postid, err = mapper.NewPostReadMysql().InsertArticle(postmsg, mapper.Db)
+	if err != nil {
+		return 0, err
+	}
+	return postid, nil
+}

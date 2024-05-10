@@ -21,7 +21,7 @@ func UsersIcon(c *gin.Context) {
 
 	data, err := logic.NewUserService().UserIcon(utils.StringToInt(ids))
 	if err != nil {
-		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
+		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, err.Error())
 		return
 	}
 	result.CommonResp(c, http.StatusOK, result.Success, data)
@@ -37,7 +37,7 @@ func Login(c *gin.Context) {
 	}
 	data, err := logic.NewUserService().UserLogin(usermsg)
 	if err != nil {
-		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
+		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, err.Error())
 		return
 	}
 	result.CommonResp(c, http.StatusOK, result.Success, data)
@@ -52,7 +52,7 @@ func Register(c *gin.Context) {
 	}
 	data, err := logic.NewUserService().RegisterUser(usermsg)
 	if err != nil {
-		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
+		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, err.Error())
 		return
 	}
 	result.CommonResp(c, http.StatusOK, result.Success, data)
@@ -98,7 +98,7 @@ func AddStudent(c *gin.Context) {
 
 	data, err := logic.NewUserService().AddStudent(studentmsg, account, group, icon)
 	if err != nil {
-		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
+		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, err.Error())
 		return
 	}
 	result.CommonResp(c, http.StatusOK, result.Success, data)
@@ -120,7 +120,7 @@ func AddGraduate(c *gin.Context) {
 
 	data, err := logic.NewUserService().AddGraduate(graduatemsg, account, icon)
 	if err != nil {
-		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
+		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, err.Error())
 		return
 	}
 	result.CommonResp(c, http.StatusOK, result.Success, data)
@@ -129,7 +129,7 @@ func AddGraduate(c *gin.Context) {
 func UserList(c *gin.Context) {
 	data, err := logic.NewUserService().UserList()
 	if err != nil {
-		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
+		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, err.Error())
 		return
 	}
 	result.CommonResp(c, http.StatusOK, result.Success, data)
@@ -144,7 +144,7 @@ func DelUser(c *gin.Context) {
 
 	err := logic.NewUserService().DelUser(userid)
 	if err != nil {
-		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, result.EmptyData)
+		result.CommonResp(c, http.StatusInternalServerError, result.ServerBusy, err.Error())
 		return
 	}
 	result.CommonResp(c, http.StatusOK, result.Success, result.EmptyData)
